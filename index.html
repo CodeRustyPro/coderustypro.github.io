@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title>Dev Shah | Student & Builder</title>
+    <meta name="description" content="Dev Shah's personal portfolio. Freshman at UIUC, builder of unlimitedSAT.com, and video editor.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-website-url.com/">
+    <meta property="og:title" content="Dev Shah | Student & Builder">
+    <meta property="og:description" content="Freshman at UIUC, builder of unlimitedSAT.com, and video editor.">
+    <meta property="og:image" content="https://your-website-url.com/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://your-website-url.com/">
+    <meta property="twitter:title" content="Dev Shah | Student & Builder">
+    <meta property="twitter:description" content="Freshman at UIUC, builder of unlimitedSAT.com, and video editor.">
+    <meta property="twitter:image" content="https://your-website-url.com/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+
+
+    <!-- Premium Fonts & Performance -->
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <style>
+      :root {
+        --font-sans: "Satoshi", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+        --code: "Bitcount Prop Single", system-ui;
+        --bg-color-dark: #000000;
+        --text-color-dark: #eaeaea;
+        --accent-color-dark: #d8d8d8;
+        --hover-color-dark: #ffffff;
+        --bg-color-light: #f4f4f4;
+        --text-color-light: #111111;
+        --accent-color-light: #6a6a6a;
+        --hover-color-light: #000000;
+        --color-g1: #00c2a8;
+        --color-g2: #2e00ff;
+        --color-g3: #ff0073;
+        --font-size-lg: clamp(1.2rem, 1.5vw + 0.8rem, 1.5rem);
+        --font-size-md: clamp(1rem, 0.5vw + 0.8rem, 1.125rem);
+        --font-size-sm: clamp(0.875rem, 0.2vw + 0.7rem, 1rem);
+      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: var(--font-sans);
+        line-height: 1.6;
+        font-size: var(--font-size-md);
+        transition: background-color 0.4s ease, color 0.4s ease;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        display: grid;
+        place-content: center;
+        min-height: 100vh;
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+      }
+      html[data-theme="dark"] { background-color: var(--bg-color-dark); color: var(--text-color-dark); }
+      html[data-theme="light"] { background-color: var(--bg-color-light); color: var(--text-color-light); }
+      
+      .gradient-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        filter: blur(80px);
+        z-index: -1;
+        transition: filter 0.75s ease-out;
+      }
+      .gradient-background > div {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.7;
+        will-change: transform;
+        /* MODIFIED: This transition animates the blobs smoothly when JS changes their position */
+        transition: opacity 0.75s ease-out, transform 12s ease-in-out;
+      }
+      .g1 { background: var(--color-g1); width: 400px; height: 400px; top: -150px; left: -150px; }
+      .g2 { background: var(--color-g2); width: 350px; height: 350px; top: -100px; right: -150px; }
+      .g3 { background: var(--color-g3); width: 300px; height: 300px; bottom: -150px; left: 20%; }
+      
+      /* DELETED: The @keyframes rules are no longer needed as JS controls the animation */
+
+      body:has(.name:hover, .inline-link:hover, .links:hover) .gradient-background { filter: blur(20px); }
+      body:has(.name:hover, .inline-link:hover, .links:hover) .gradient-background > div { opacity: 1; }
+
+      .theme-toggle { position: fixed; top: 2rem; right: 2rem; background: transparent; border: none; cursor: pointer; z-index: 1000; width: 24px; height: 24px; transition: opacity 0.3s ease, transform 0.3s ease; }
+      .theme-toggle:hover { opacity: 1; transform: scale(1.1); }
+      html[data-theme="dark"] .theme-toggle { color: var(--text-color-dark); opacity: 0.8; }
+      html[data-theme="light"] .theme-toggle { color: var(--text-color-light); opacity: 0.5; }
+      .theme-toggle .moon { display: none; }
+      .theme-toggle .sun { display: block; }
+      html[data-theme="dark"] .theme-toggle .moon { display: block; }
+      html[data-theme="dark"] .theme-toggle .sun { display: none; }
+
+      .container { display: grid; gap: 3.5rem; width: 100%; max-width: 55ch; z-index: 1; }
+
+      .name {
+        font-family: var(--code);
+        font-size: var(--font-size-lg);
+        font-weight: 600;
+        cursor: pointer;
+      }
+      html[data-theme="dark"] .name { color: var(--accent-color-dark); }
+      html[data-theme="light"] .name { color: var(--accent-color-light); }
+      .statement { font-size: var(--font-size-lg); font-weight: 400; letter-spacing: -0.01em; line-height: 1.5; }
+      
+      .inline-link { text-decoration: none; transition: color 0.3s ease; }
+      html[data-theme="dark"] .inline-link { color: var(--text-color-dark); }
+      html[data-theme="dark"] .inline-link:hover { color: var(--hover-color-dark); }
+      html[data-theme="light"] .inline-link { color: var(--text-color-light); }
+      html[data-theme="light"] .inline-link:hover { color: var(--hover-color-light); }
+      
+      .links { list-style: none; display: flex; gap: 1.5rem; }
+      .links a { text-decoration: none; font-size: var(--font-size-sm); transition: color 0.3s ease; }
+      html[data-theme="dark"] .links a { color: var(--accent-color-dark); }
+      html[data-theme="light"] .links a { color: var(--accent-color-light); }
+      html[data-theme="dark"] .links a:hover { color: var(--hover-color-dark); }
+      html[data-theme="light"] .links a:hover { color: var(--hover-color-light); }
+    </style>
+  </head>
+  <body>
+    <div class="gradient-background">
+      <div class="g1"></div>
+      <div class="g2"></div>
+      <div class="g3"></div>
+    </div>
+
+    <button class="theme-toggle" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+      <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+      <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+    </button>
+
+    <main class="container">
+      <header class="header"><h1 class="name" title="dev shah">> dev shah</h1></header>
+      <p class="statement">
+        freshman at @uiuc <br />building cool things like
+        <a href="https://www.unlimitedsat.com" target="_blank" rel="noopener noreferrer" class="inline-link">unlimitedSAT.com</a>.
+        <br />
+        also into video editing & design (a bit too much, maybe.)
+      </p>
+      
+      <footer class="footer">
+        <ul class="links">
+            <li><a href="mailto:devshah3@illinois.edu" aria-label="Send me an email">Email</a></li>
+            <li><a href="https://github.com/coderustypro" target="_blank" rel="noopener noreferrer" aria-label="View my GitHub profile">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/dev10shah/" target="_blank" rel="noopener noreferrer" aria-label="Connect with me on LinkedIn">LinkedIn</a></li>
+            <li><a href="https://www.linkedin.com/in/dev10shah/" target="_blank" rel="noopener noreferrer" aria-label="Here's my resume">Resume</a></li>
+
+        </ul>
+      </footer>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Theme toggle logic (unchanged)
+        const themeToggle = document.getElementById("theme-toggle");
+        const htmlElement = document.documentElement;
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        htmlElement.setAttribute("data-theme", savedTheme);
+        themeToggle.addEventListener("click", () => {
+          const currentTheme = htmlElement.getAttribute("data-theme");
+          const newTheme = currentTheme === "dark" ? "light" : "dark";
+          htmlElement.setAttribute("data-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+        });
+
+        // =================================================================
+        // NEW: JavaScript-driven random blob animation
+        // =================================================================
+        const blobs = document.querySelectorAll('.gradient-background > div');
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const moveBlob = (blob) => {
+          // Generate random positions and rotation
+          // Values are calculated to allow blobs to move across a wide area around the center
+          const moveX = (Math.random() - 0.5) * (viewportWidth * 1.2);
+          const moveY = (Math.random() - 0.5) * (viewportHeight * 1.2);
+          const rotate = Math.random() * 360;
+
+          // Apply the new transform
+          blob.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+
+          // Set a random timeout for the next move
+          // This ensures each blob moves on its own unpredictable schedule
+          const randomDuration = Math.random() * 5000 + 10000; // between 10s and 15s
+          setTimeout(() => moveBlob(blob), randomDuration);
+        };
+
+        // Start the animation for each blob
+        blobs.forEach(moveBlob);
+      });
+    </script>
+  </body>
+</html>
