@@ -24,7 +24,6 @@
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
 
-
     <!-- Premium Fonts & Performance -->
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -69,7 +68,9 @@
         font-family: var(--font-sans);
         line-height: 1.6;
         font-size: var(--font-size-md);
-        transition: background-color 0.4s ease, color 0.4s ease;
+        background-color: var(--bg-color); 
+        color: var(--text-color);
+        transition: color 0.4s ease;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         display: grid;
@@ -79,8 +80,8 @@
         position: relative;
         overflow: hidden;
       }
-      html[data-theme="dark"] { background-color: var(--bg-color-dark); color: var(--text-color-dark); }
-      html[data-theme="light"] { background-color: var(--bg-color-light); color: var(--text-color-light); }
+      html[data-theme="dark"] { --bg-color: var(--bg-color-dark); --text-color: var(--text-color-dark); }
+      html[data-theme="light"] { --bg-color: var(--bg-color-light); --text-color: var(--text-color-light); }
       
       .gradient-background {
         position: fixed;
@@ -97,17 +98,14 @@
         border-radius: 50%;
         opacity: 0.7;
         will-change: transform;
-        /* MODIFIED: This transition animates the blobs smoothly when JS changes their position */
         transition: opacity 0.75s ease-out, transform 12s ease-in-out;
       }
       .g1 { background: var(--color-g1); width: 400px; height: 400px; top: -150px; left: -150px; }
       .g2 { background: var(--color-g2); width: 350px; height: 350px; top: -100px; right: -150px; }
       .g3 { background: var(--color-g3); width: 300px; height: 300px; bottom: -150px; left: 20%; }
       
-      /* DELETED: The @keyframes rules are no longer needed as JS controls the animation */
-
-      body:has(.name:hover, .inline-link:hover, .links:hover) .gradient-background { filter: blur(20px); }
-      body:has(.name:hover, .inline-link:hover, .links:hover) .gradient-background > div { opacity: 1; }
+      body:has(.name:hover, .inline-link:hover, .magnetic-link:hover) .gradient-background { filter: blur(60px); }
+      body:has(.name:hover, .inline-link:hover, .magnetic-link:hover) .gradient-background > div { opacity: 1; }
 
       .theme-toggle { position: fixed; top: 2rem; right: 2rem; background: transparent; border: none; cursor: pointer; z-index: 1000; width: 24px; height: 24px; transition: opacity 0.3s ease, transform 0.3s ease; }
       .theme-toggle:hover { opacity: 1; transform: scale(1.1); }
@@ -117,9 +115,9 @@
       .theme-toggle .sun { display: block; }
       html[data-theme="dark"] .theme-toggle .moon { display: block; }
       html[data-theme="dark"] .theme-toggle .sun { display: none; }
-
+      
       .container { display: grid; gap: 3.5rem; width: 100%; max-width: 55ch; z-index: 1; }
-
+      
       .name {
         font-family: var(--code);
         font-size: var(--font-size-lg);
@@ -136,15 +134,59 @@
       html[data-theme="light"] .inline-link { color: var(--text-color-light); }
       html[data-theme="light"] .inline-link:hover { color: var(--hover-color-light); }
       
-      .links { list-style: none; display: flex; gap: 1.5rem; }
-      .links a { text-decoration: none; font-size: var(--font-size-sm); transition: color 0.3s ease; }
-      html[data-theme="dark"] .links a { color: var(--accent-color-dark); }
-      html[data-theme="light"] .links a { color: var(--accent-color-light); }
-      html[data-theme="dark"] .links a:hover { color: var(--hover-color-dark); }
-      html[data-theme="light"] .links a:hover { color: var(--hover-color-light); }
+      .links { list-style: none; display: flex; flex-wrap: wrap; gap: 1rem; }
+      
+      .magnetic-link {
+        text-decoration: none;
+        font-size: var(--font-size-sm);
+        padding: 0.75rem 1.25rem;
+        border-radius: 100px;
+        display: inline-block;
+        will-change: transform;
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        position: relative;
+      }
+
+      html[data-theme="dark"] .magnetic-link { color: var(--accent-color-dark); border-color: #333; background-color: transparent; }
+      html[data-theme="dark"] .magnetic-link:hover { color: var(--hover-color-dark); background-color: #222; border-color: #555; }
+      html[data-theme="light"] .magnetic-link { color: var(--accent-color-light); border-color: #ddd; background-color: transparent; }
+      html[data-theme="light"] .magnetic-link:hover { color: var(--hover-color-light); background-color: #e9e9e9; border-color: #ccc; }
+      
+      .magnetic-link .text { display: inline-block; will-change: transform; pointer-events: none; }
+      
+      #transition-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        pointer-events: none;
+        filter: url(#filter-goo);
+      }
+      .transition-circle {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        background-color: var(--bg-color-dark);
+        border-radius: 50%;
+        transform: scale(0);
+        transform-origin: center center;
+      }
     </style>
   </head>
   <body>
+    <div id="transition-container"></div>
+    <svg id="filter-svg" style="display: none;">
+      <defs>
+        <filter id="filter-goo">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur" />
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 100 -15" result="goo" />
+          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+        </filter>
+      </defs>
+    </svg>
+
     <div class="gradient-background">
       <div class="g1"></div>
       <div class="g2"></div>
@@ -167,54 +209,136 @@
       
       <footer class="footer">
         <ul class="links">
-            <li><a href="mailto:devshah3@illinois.edu" aria-label="Send me an email">Email</a></li>
-            <li><a href="https://github.com/coderustypro" target="_blank" rel="noopener noreferrer" aria-label="View my GitHub profile">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/dev10shah/" target="_blank" rel="noopener noreferrer" aria-label="Connect with me on LinkedIn">LinkedIn</a></li>
-            <li><a href="https://www.linkedin.com/in/dev10shah/" target="_blank" rel="noopener noreferrer" aria-label="Here's my resume">Resume</a></li>
-
+          <li><a href="mailto:devshah3@illinois.edu" class="magnetic-link" aria-label="Send me an email"><span class="text">Email</span></a></li>
+          <li><a href="https://github.com/coderustypro" target="_blank" rel="noopener noreferrer" class="magnetic-link" aria-label="View my GitHub profile"><span class="text">GitHub</span></a></li>
+          <li><a href="https://www.linkedin.com/in/dev10shah/" target="_blank" rel="noopener noreferrer" class="magnetic-link" aria-label="Connect with me on LinkedIn"><span class="text">LinkedIn</span></a></li>
+          <li><a href="https://www.linkedin.com/in/dev10shah/" target="_blank" rel="noopener noreferrer" class="magnetic-link" aria-label="Here's my resume"><span class="text">Resume</span></a></li>
         </ul>
       </footer>
     </main>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // Theme toggle logic (unchanged)
-        const themeToggle = document.getElementById("theme-toggle");
         const htmlElement = document.documentElement;
+        
+        // ========================================================
+        // MODIFIED: Created a reusable function for text animation
+        // ========================================================
+        const animateTextIn = (delay = 0) => {
+          const elements = [".name", ".statement", ".links li"];
+          // First, set the elements to their starting state (invisible and shifted down)
+          gsap.set(elements, { opacity: 0, y: 20 });
+          // Then, animate them to their final state
+          gsap.to(elements, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            stagger: 0.15,
+            delay: delay
+          });
+        };
+
+        // CALLED HERE: Initial animation on page load
+        animateTextIn(0.2);
+
+
+        // The Glorious, Unimaginable Fluid Theme Switch
+        const themeToggle = document.getElementById("theme-toggle");
+        const transitionContainer = document.getElementById("transition-container");
+        let isTransitioning = false;
+        
         const savedTheme = localStorage.getItem("theme") || "dark";
         htmlElement.setAttribute("data-theme", savedTheme);
+
         themeToggle.addEventListener("click", () => {
+          if (isTransitioning) return;
+          isTransitioning = true;
+
           const currentTheme = htmlElement.getAttribute("data-theme");
           const newTheme = currentTheme === "dark" ? "light" : "dark";
-          htmlElement.setAttribute("data-theme", newTheme);
-          localStorage.setItem("theme", newTheme);
+          const newBgColor = getComputedStyle(document.body).getPropertyValue(
+            newTheme === 'dark' ? '--bg-color-dark' : '--bg-color-light'
+          );
+          
+          // Before starting the transition, make the text disappear instantly
+          gsap.set([".name", ".statement", ".links li"], { opacity: 0 });
+
+          const circle1 = document.createElement('div');
+          const circle2 = document.createElement('div');
+          circle1.className = 'transition-circle';
+          circle2.className = 'transition-circle';
+          
+          transitionContainer.appendChild(circle1);
+          transitionContainer.appendChild(circle2);
+
+          const rect = themeToggle.getBoundingClientRect();
+          const x = rect.left + rect.width / 2;
+          const y = rect.top + rect.height / 2;
+
+          gsap.set([circle1, circle2], { 
+            left: x - 25, 
+            top: y - 25, 
+            backgroundColor: newBgColor 
+          });
+
+          const tl = gsap.timeline({
+            onComplete: () => {
+              htmlElement.setAttribute("data-theme", newTheme);
+              localStorage.setItem("theme", newTheme);
+              transitionContainer.innerHTML = '';
+              isTransitioning = false;
+              // CALLED HERE: Re-run the text animation after the theme switch is complete
+              animateTextIn(0.1); 
+            }
+          });
+
+          tl.to(circle1, {
+            duration: 1.2,
+            scale: 50,
+            x: -window.innerWidth / 4,
+            ease: "power3.inOut"
+          })
+          .to(circle2, {
+            duration: 1.2,
+            scale: 50,
+            x: window.innerWidth / 4,
+            ease: "power3.inOut"
+          }, "-=1.1");
         });
 
-        // =================================================================
-        // NEW: JavaScript-driven random blob animation
-        // =================================================================
+        // JavaScript-driven random blob animation
         const blobs = document.querySelectorAll('.gradient-background > div');
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-
         const moveBlob = (blob) => {
-          // Generate random positions and rotation
-          // Values are calculated to allow blobs to move across a wide area around the center
           const moveX = (Math.random() - 0.5) * (viewportWidth * 1.2);
           const moveY = (Math.random() - 0.5) * (viewportHeight * 1.2);
           const rotate = Math.random() * 360;
-
-          // Apply the new transform
           blob.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
-
-          // Set a random timeout for the next move
-          // This ensures each blob moves on its own unpredictable schedule
-          const randomDuration = Math.random() * 5000 + 10000; // between 10s and 15s
+          const randomDuration = Math.random() * 5000 + 10000;
           setTimeout(() => moveBlob(blob), randomDuration);
         };
-
-        // Start the animation for each blob
         blobs.forEach(moveBlob);
+
+        // Magnetic Buttons Logic
+        const magneticLinks = document.querySelectorAll('.magnetic-link');
+        magneticLinks.forEach(link => {
+          const textElement = link.querySelector('.text');
+          link.addEventListener('mousemove', (e) => {
+            const rect = link.getBoundingClientRect();
+            const { clientX, clientY } = e;
+            const x = clientX - rect.left - rect.width / 2;
+            const y = clientY - rect.top - rect.height / 2;
+            gsap.to(link, { x: x * 0.4, y: y * 0.4, duration: 0.8, ease: 'power4.out' });
+            gsap.to(textElement, { x: x * 0.6, y: y * 0.6, duration: 1, ease: 'power4.out' });
+          });
+          link.addEventListener('mouseleave', () => {
+            gsap.to([link, textElement], { x: 0, y: 0, duration: 1, ease: 'elastic.out(1, 0.3)' });
+          });
+        });
       });
     </script>
   </body>
