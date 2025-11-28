@@ -265,9 +265,14 @@
           const x = rect.left + rect.width / 2;
           const y = rect.top + rect.height / 2;
 
+          // FIX: Use x/y transforms instead of left/top to prevent drift during scale
           gsap.set([circle1, circle2], { 
-            left: x - 25, 
-            top: y - 25, 
+            left: 0,
+            top: 0,
+            x: x,
+            y: y,
+            xPercent: -50,
+            yPercent: -50,
             backgroundColor: newBgColor 
           });
 
@@ -281,17 +286,17 @@
             }
           });
 
-          // FIX: Add elastic easing and stagger for smoother, more satisfying animation
+          // FIX: Use circ.out for smooth deceleration, slower duration for satisfaction
           tl.to(circle1, {
-            duration: 0.9,
-            scale: 65,
-            ease: "expo.out"
+            duration: 1.1,
+            scale: 70,
+            ease: "circ.out"
           })
           .to(circle2, {
-            duration: 0.9,
-            scale: 65,
-            ease: "expo.out"
-          }, "-=0.75");
+            duration: 1.1,
+            scale: 70,
+            ease: "circ.out"
+          }, "-=0.85");
         });
 
         const blobs = document.querySelectorAll('.gradient-background > div');
