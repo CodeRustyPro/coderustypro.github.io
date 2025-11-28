@@ -328,6 +328,34 @@
             gsap.to([link, textElement], { x: 0, y: 0, duration: 1, ease: 'elastic.out(1, 0.3)' });
           });
         });
+
+        const nameElement = document.querySelector('.name');
+        if (nameElement) {
+          const originalText = nameElement.innerText;
+          const chars = "▓▒░>_</$";
+          let isScrambling = false;
+
+          const scrambleEffect = () => {
+            if (isScrambling) return;
+            isScrambling = true;
+            let iteration = 0;
+            const interval = setInterval(() => {
+              nameElement.innerText = originalText.split('')
+                .map((letter, index) => {
+                  if (index < iteration) return originalText[index];
+                  if (letter === ' ' || letter === '>') return letter;
+                  return chars[Math.floor(Math.random() * chars.length)];
+                })
+                .join('');
+              if (iteration >= originalText.length) {
+                clearInterval(interval);
+                isScrambling = false;
+              }
+              iteration += 1/2;
+            }, 40);
+          };
+          nameElement.addEventListener('mouseenter', scrambleEffect);
+        }
       });
     </script>
   </body>
