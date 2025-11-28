@@ -281,26 +281,21 @@
             }
           });
 
-          tl.to(circle1, {
+          // FIX: Expand circles from center without offsetting them
+          tl.to([circle1, circle2], {
             duration: 1.2,
-            scale: 50,
-            x: -window.innerWidth / 4,
+            scale: 60,
             ease: "power3.inOut"
-          })
-          .to(circle2, {
-            duration: 1.2,
-            scale: 50,
-            x: window.innerWidth / 4,
-            ease: "power3.inOut"
-          }, "-=1.1");
+          });
         });
 
         const blobs = document.querySelectorAll('.gradient-background > div');
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
         const moveBlob = (blob) => {
-          const moveX = (Math.random() - 0.5) * (viewportWidth * 1.2);
-          const moveY = (Math.random() - 0.5) * (viewportHeight * 1.2);
+          // FIX: Keep blobs within viewport by reducing movement range
+          const moveX = (Math.random() - 0.5) * (viewportWidth * 0.6);
+          const moveY = (Math.random() - 0.5) * (viewportHeight * 0.6);
           const rotate = Math.random() * 360;
           blob.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
           const randomDuration = Math.random() * 5000 + 10000;
