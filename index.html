@@ -281,12 +281,17 @@
             }
           });
 
-          // FIX: Expand circles from center without offsetting them
-          tl.to([circle1, circle2], {
-            duration: 1.2,
-            scale: 60,
-            ease: "power3.inOut"
-          });
+          // FIX: Add elastic easing and stagger for smoother, more satisfying animation
+          tl.to(circle1, {
+            duration: 0.9,
+            scale: 65,
+            ease: "expo.out"
+          })
+          .to(circle2, {
+            duration: 0.9,
+            scale: 65,
+            ease: "expo.out"
+          }, "-=0.75");
         });
 
         const blobs = document.querySelectorAll('.gradient-background > div');
